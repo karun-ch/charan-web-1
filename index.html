@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Charan & Sarvani — Wedding Invitation</title>
+  <meta name="description" content="A simple, interactive digital wedding invitation for Charan & Sarvani." />
+  <meta name="author" content="You" />
+
+  <!-- Open Graph / Twitter (replace og image later) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Charan &amp; Sarvani — Wedding Invitation" />
+  <meta property="og:description" content="Join us for our special day." />
+  <meta property="og:image" content="Mb.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Charan &amp; Sarvani — Wedding Invitation" />
+  <meta name="twitter:description" content="Join us for our special day." />
+  <meta name="twitter:image" content="Mb.jpg" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --ink:#111827; --muted:#4b5563; --gold:#a47c5b; --paper:#fff; --bg-url: url('Mb.jpg'); --accent:#0b1220;
+      --ease:cubic-bezier(.22,.61,.36,1); --dur:.6s;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:#f7f3ee;color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;line-height:1.6}
+    a{color:var(--gold);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    /* Fixed, dimmed background (no blur) that we swap per-tile */
+    #bg{position:fixed;inset:0;z-index:-2}
+    #bg::before{content:"";position:absolute;inset:0;background: var(--bg-url) center/cover no-repeat;filter: brightness(.45) contrast(1.02); animation: kenburns 28s ease-in-out infinite alternate;}
+    /* Soft vignette overlay for better text readability */
+    #bg::after{content:"";position:absolute;inset:0;background: radial-gradient(120% 120% at 50% 30%, rgba(0,0,0,.15) 0%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.45) 100%); z-index:-1}
+
+    @keyframes kenburns{ from{ transform:scale(1) translate3d(0,0,0);} to{ transform:scale(1.06) translate3d(0,-1.5%,0);} }
+
+    header{position:sticky;top:0;z-index:20;background:rgba(17,24,39,.55);backdrop-filter:saturate(130%) blur(6px);border-bottom:1px solid rgba(255,255,255,.08);color:#fff}
+    .container{width:min(1100px,92vw);margin:0 auto}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .brand{font-family:'Playfair Display',Georgia,serif;font-weight:700;letter-spacing:.4px;color:#fff}
+    .nav a{margin-left:16px;color:#f9fafb;opacity:.9}
+    .nav a:hover{opacity:1}
+
+    main{scroll-behavior:smooth}
+    section{padding:72px 0}
+    .section-title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(28px,5vw,42px);margin:0 0 10px;text-align:center;color:#0b1220}
+    .sub{color:#374151;text-align:center;margin:0 0 26px}
+
+    /* Translucent content panels for readability */
+    .glass{background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.55);backdrop-filter:saturate(140%) blur(2px);border-radius:16px;box-shadow:0 10px 30px -18px rgba(24,24,27,.35)}
+
+    /* Welcome / hero */
+    .hero{min-height:100vh;display:grid;place-items:center;text-align:center}
+    .names{font-family:'Playfair Display',Georgia,serif;font-size:clamp(36px,7vw,70px);line-height:1.1;margin:100px 0;color:var(--accent)}
+    .welcome{max-width:680px;margin:28px auto 0;padding:18px 22px} /* a bit lower */
+
+    /* Tile layout */
+    .tile{position:relative}
+    .card{padding:20px}
+    .grid{display:grid;gap:16px}
+    @media(min-width:760px){.grid.cols-2{grid-template-columns:1fr 1fr}.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
+    .meta{color:#374151;font-size:14px}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:999px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;box-shadow:0 8px 20px -12px rgba(0,0,0,.35); transition:transform .15s var(--ease), box-shadow .2s var(--ease), filter .2s var(--ease)}
+    .btn:hover{filter:brightness(1.03); transform:translateY(-1px); box-shadow:0 10px 28px -16px rgba(0,0,0,.4)}
+    .btn:active{transform:translateY(0); filter:brightness(.98)}
+    .btn:focus-visible{outline:none; box-shadow:0 0 0 4px rgba(11,18,32,.15), 0 8px 20px -12px rgba(0,0,0,.35)}
+
+    /* Inputs */
+    .field{display:grid;gap:8px;margin-bottom:14px}
+    .input,.select,.textarea{padding:12px 14px;border:1px solid #e5ded7;border-radius:12px;background:#fafafa;font:inherit;outline:none;transition:box-shadow .15s,border-color .15s}
+    .input:focus,.select:focus,.textarea:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(164,124,91,.25);background:#fff}
+    .radio-row{display:flex;flex-wrap:wrap;gap:10px}
+    .radio{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #eae1d9;border-radius:999px;padding:8px 12px;cursor:pointer}
+
+    .list{display:grid;gap:10px;margin-top:12px}
+    .note{background:#fff;border:1px solid #eee5de;border-radius:12px;padding:12px}
+
+    /* Scroll reveal */
+    .reveal{ opacity:0; transform:translateY(14px) scale(.98); filter:saturate(.9);
+      transition:opacity var(--dur) var(--ease), transform var(--dur) var(--ease), filter var(--dur) var(--ease); will-change:opacity,transform;
+    }
+    .reveal.in{ opacity:1; transform:none; filter:none; }
+
+    /* Card hover lift */
+    .glass.card{ transition:transform .4s var(--ease), box-shadow .4s var(--ease); }
+    .glass.card:hover{ transform:translateY(-3px); box-shadow:0 18px 45px -24px rgba(24,24,27,.45); }
+
+    /* Tiny utilities + hero float/bounce (no Tailwind needed) */
+    .mt-4{margin-top:1rem}
+    .mx-auto{margin-left:auto;margin-right:auto}
+    .w-6{width:24px}
+    .h-6{height:24px}
+    .text-muted-foreground{color:#e5e7eb;opacity:.95}
+    .text-accent{color:#ffffff}
+    .animate-float{animation:float 3.5s var(--ease) infinite}
+    @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+    .animate-bounce{animation:bounce 1.6s cubic-bezier(.28,.84,.42,1) infinite}
+    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+    footer{padding:10px 0 10px;color:#e5e7eb;text-align:center;background:rgba(17,24,39,.6)}
+
+    /* Respect users who prefer reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      #bg::before{ animation:none; }
+      .reveal{ opacity:1 !important; transform:none !important; filter:none !important; }
+      .glass.card, .btn{ transition:none; }
+      .animate-float, .animate-bounce{ animation:none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div id="bg" style="--bg-url: url('Mb.jpg');"></div>
+
+  <header>
+    <div class="container nav" role="navigation" aria-label="Primary">
+      <div class="brand">Charan &amp; Sarvani</div>
+      <nav>
+        <a href="#venue">Venue</a>
+        <a href="#maps">Maps</a>
+        <a href="#live">Live</a>
+        <a href="#rsvp">RSVP</a>
+        <a href="#guestbook">Guestbook</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO / WELCOME (Background: Mb.jpg) -->
+    <section class="hero tile" data-bg="Mb.jpg" aria-labelledby="hero-title">
+      <div class="container">
+        <h1 id="hero-title" class="names reveal">Charan &amp; Sarvani</h1>
+
+        <!-- Welcome text IN the glass box (moved a bit lower) -->
+        <div class="welcome glass reveal">
+          <p>We are excited to invite you to celebrate the most special day of our lives - Our Wedding! Surrounded by our families, we’re beginning a beautiful new chapter as we unite in love and commitment.</p>
+          <p>Your presence would mean the world to us as we embark on this amazing journey together.</p>
+        </div>
+
+        <!-- Scroll-down line OUTSIDE the box + animated arrow -->
+        <p class="text-muted-foreground animate-float reveal" style="margin-top:18px">Scroll down for all the details about our celebration.</p>
+        <div class="mt-4 animate-bounce reveal">
+          <svg class="w-6 h-6 mx-auto text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- TILE 1: VENUE DETAILS (Background: venue.jpg) -->
+    <section id="venue" class="tile" data-bg="venue.jpg" aria-labelledby="venue-title">
+      <div class="container">
+        <div class="glass card reveal">
+          <h2 id="venue-title" class="section-title reveal">Venue Details</h2>
+          <p class="sub reveal">Wedding Ceremony &amp; Reception Information</p>
+          <div class="grid cols-3">
+            <div class="reveal">
+              <h3 style="margin:0 0 6px;font-family:'Playfair Display',serif;color:#0b1220">Wedding Ceremony</h3>
+              <p class="meta">Date</p>
+              <p><strong>Wednesday, 22nd October, 2025</strong></p>
+              <p class="meta">Time</p>
+              <p><strong>11:45 PM</strong></p>
+            </div>
+            <div class="reveal">
+              <h3 style="margin:0 0 6px;font-family:'Playfair Display',serif;color:#0b1220">Reception</h3>
+              <p class="meta">Time</p>
+              <p><strong>6:00 PM onwards</strong></p>
+            </div>
+            <div class="reveal">
+              <h3 style="margin:0 0 6px;font-family:'Playfair Display',serif;color:#0b1220">Venue</h3>
+              <p><strong>G.V.S Gajula Gardens</strong><br/>Ferry Road, Yanam</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TILE 2: MAPS (Background: maps.jpg) -->
+    <section id="maps" class="tile" data-bg="maps.jpg" aria-labelledby="maps-title">
+      <div class="container">
+        <div class="glass card reveal">
+          <h2 id="maps-title" class="section-title reveal">Location &amp; Maps</h2>
+          <p class="sub reveal">Find Your Way to Our Special Day</p>
+
+          <div class="grid cols-2">
+            <div class="reveal">
+              <h3 style="margin:0 0 6px;font-family:'Playfair Display',serif;color:#0b1220">G.V.S Gajula Gardens</h3>
+              <p>Ferry Road, Yanam</p>
+              <p style="text-align:center"><a class="btn" href="https://maps.app.goo.gl/HNG4PSbMNr9hQQtj6?g_st=aw" target="_blank" rel="noopener">Open in Google Maps</a></p>
+            </div>
+            <div class="reveal">
+              <div style="aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid #e8dfd7;background:#f5efe9">
+                <iframe title="Map to G.V.S Gajula Gardens" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="width:100%;height:100%;border:0" src="https://www.google.com/maps?q=G.V.S%20Gajula%20Gardens%20Ferry%20Road%20Yanam&output=embed"></iframe>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid cols-2" style="margin-top:16px">
+            <div class="note reveal">
+              <strong>How to Reach (Sample)</strong>
+              <p>From Rajahmundry Airport: take NH216 towards Yanam; venue on Ferry Road (~1 hr 30 mins).</p>
+            </div>
+            <div class="note reveal">
+              <strong>Parking & Entry (Sample)</strong>
+              <p>Valet available at main gate. Please arrive 20 minutes early for seating.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TILE 3: LIVE STREAM (Background: live.jpg) -->
+    <section id="live" class="tile" data-bg="live.jpg" aria-labelledby="live-title">
+      <div class="container">
+        <div class="glass card reveal">
+          <h2 id="live-title" class="section-title reveal">Live Stream</h2>
+          <p class="sub reveal">Link will be added closer to the date.</p>
+          <div class="reveal" style="aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid #e8dfd7;background:#110d09;display:grid;place-items:center;color:#c9b8a9">
+            <p style="margin:0;padding:16px;text-align:center">Embed your YouTube / Vimeo / custom player here.<br/>Replace the placeholder once the stream link is ready.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TILE 4: RSVP (Background: rsvp.jpg) -->
+    <section id="rsvp" class="tile" data-bg="rsvp.jpg" aria-labelledby="rsvp-title">
+      <div class="container">
+        <div class="glass card reveal">
+          <h2 id="rsvp-title" class="section-title reveal">RSVP</h2>
+          <p class="sub reveal">We'd Love to Celebrate With You!</p>
+          <p class="reveal" style="text-align:center">Your presence at our wedding would make our day even more special. Kindly let us know if you will be able to join us, so we can prepare to share this beautiful day with you. Looking forward to celebrating together!</p>
+
+          <!-- Direct-entry RSVP form -->
+          <form id="rsvp-form" class="grid cols-2 reveal" method="post" action="#">
+            <label class="field" style="grid-column:1/-1"><span>Your Name *</span><input class="input" name="name" required placeholder="Enter your full name" /></label>
+            <label class="field" style="grid-column:1/-1"><span>Email (optional)</span><input class="input" type="email" name="email" placeholder="you@example.com" /></label>
+            <fieldset class="field" style="grid-column:1/-1;border:0;padding:0;margin:0">
+              <legend style="font-weight:700;margin-bottom:6px">Will you be attending?</legend>
+              <div class="radio-row">
+                <label class="radio"><input type="radio" name="attending" value="yes" required> Yes, I'll be there! 💕</label>
+                <label class="radio"><input type="radio" name="attending" value="maybe"> Maybe, I'll try my best 🤞</label>
+                <label class="radio"><input type="radio" name="attending" value="no"> Sorry, can't make it 😢</label>
+              </div>
+            </fieldset>
+            <label class="field" id="guests-wrap" style="grid-column:1/-1;display:none"><span>Number of guests</span><input class="input" type="number" name="guests" min="1" max="10" placeholder="e.g., 2"/></label>
+            <button class="btn" type="submit" style="margin:0 auto;display:block" style="grid-column:1/-1">Submit RSVP</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- TILE 5: DIGITAL GUESTBOOK (Background: dgn.jpg) -->
+    <section id="guestbook" class="tile" data-bg="dgn.jpg" aria-labelledby="guestbook-title">
+      <div class="container">
+        <div class="glass card reveal">
+          <h2 id="guestbook-title" class="section-title reveal">Digital Guestbook</h2>
+          <p class="sub reveal">Share Your Love and Wishes!</p>
+          <p class="reveal" style="text-align:center">We are so grateful to have you here. Whether near or far, your presence means everything to us. Please take a moment to leave a message in our digital guestbook. We would love to hear your thoughts, best wishes, or any memories you'd like to share as we begin this new chapter together.</p>
+
+          <!-- Direct-entry Guestbook form -->
+          <form id="gb-form" class="grid cols-2 reveal" autocomplete="off">
+            <label class="field"><span>Your Name *</span><input class="input" name="name" required placeholder="Your name" /></label>
+            <label class="field"><span>City</span><input class="input" name="city" placeholder="Where you're writing from" /></label>
+            <label class="field" style="grid-column:1/-1"><span>Your Message *</span><textarea class="textarea" name="message" rows="3" required placeholder="Best wishes, memories, blessings…"></textarea></label>
+            <button class="btn" type="submit" style="margin:0 auto;display:block">Add to Guestbook</button>
+          </form>
+          <div id="gb-list" class="list reveal" aria-live="polite" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>With love, Charan &amp; Sarvani • October 22nd, 2025</p>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scrolling for in-page links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click',e=>{const id=a.getAttribute('href').slice(1);const el=document.getElementById(id);if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'});}});
+    });
+
+    // IntersectionObserver to swap dim background by tile
+    const bg=document.getElementById('bg');
+    const tiles=[...document.querySelectorAll('.tile')];
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const url=entry.target.getAttribute('data-bg')||'Mb.jpg';
+          bg.style.setProperty('--bg-url', `url('${url}')`);
+        }
+      })
+    },{root:null,threshold:.55});
+    tiles.forEach(t=>io.observe(t));
+
+    // Scroll-reveal: apply to key elements, then reveal as they enter view
+    const revealEls=document.querySelectorAll('.reveal');
+    const ro=new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); ro.unobserve(en.target);} });
+    },{threshold:.2});
+    revealEls.forEach(el=> ro.observe(el));
+
+    // Footer year
+    document.getElementById('year').textContent=new Date().getFullYear();
+
+    // RSVP logic: guests field only for "Yes"
+    const guestsWrap = document.getElementById('guests-wrap');
+    const guestsInput = guestsWrap.querySelector('input');
+
+    function updateGuestsVisibility() {
+    const choice = document.querySelector('input[name="attending"]:checked');
+    if (choice && choice.value === 'yes') {
+        guestsWrap.style.display = 'block';
+        guestsInput.setAttribute('required', 'required');
+    } else {
+        guestsWrap.style.display = 'none';
+        guestsInput.removeAttribute('required');
+        guestsInput.value = '';
+    }
+    }
+
+    // listen for changes
+    document.querySelectorAll('input[name="attending"]').forEach(radio => {
+    radio.addEventListener('change', updateGuestsVisibility);
+    });
+
+    // run once on load in case a radio is preselected
+    updateGuestsVisibility();
+
+
+    // ✅ Google Apps Script endpoints (kept as you provided)
+    const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycbzcWe9Buf7ufZXKO-juZno16NZEfO63oqxAyf6U9tgTXvo1Tu-tiSQatOv_s_hy543c/exec";
+    document.getElementById('rsvp-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      data.append('type', 'rsvp');
+      try {
+        const res = await fetch(RSVP_ENDPOINT, { method: 'POST', body: data });
+        const json = await res.json();
+        if (json.ok) { form.reset(); alert('Thanks! Your RSVP has been submitted.'); }
+        else { alert('Submission failed: ' + (json.error || 'Unknown error')); }
+      } catch (err) { alert('Network error. Please try again.'); }
+    });
+
+    const GB_ENDPOINT = "https://script.google.com/macros/s/AKfycbzcWe9Buf7ufZXKO-juZno16NZEfO63oqxAyf6U9tgTXvo1Tu-tiSQatOv_s_hy543c/exec";
+    const gbForm = document.getElementById('gb-form');
+    const gbList = document.getElementById('gb-list');
+
+    const addGuestbookRow = (row) => {
+      const d = new Date();
+      const item = document.createElement('div');
+      item.className = 'note';
+      const loc = row.city ? ` • ${row.city}` : '';
+      item.innerHTML = `<strong>${row.name || 'Guest'}</strong><span class="meta"> • ${d.toLocaleDateString()}</span>${loc?`<span class="meta">${loc}</span>`:''}<p style="margin:6px 0 0">${row.message || ''}</p>`;
+      gbList.prepend(item);
+    };
+
+    gbForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = gbForm;
+      const data = new FormData(form);
+      data.append('type', 'guestbook');
+      try {
+        const res = await fetch(GB_ENDPOINT, { method: 'POST', body: data });
+        const json = await res.json();
+        if (json.ok) { addGuestbookRow(Object.fromEntries(new FormData(form).entries())); form.reset(); alert('Message posted to guestbook!'); }
+        else { alert('Submission failed: ' + (json.error || 'Unknown error')); }
+      } catch (err) { alert('Network error. Please try again.'); }
+    });
+  </script>
+</body>
+</html>
